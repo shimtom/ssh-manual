@@ -29,6 +29,59 @@ $ ssh -i /path/to/private_key -p [ポート番号] user@host
 $ ssh -X -p [ポート番号] user@host
 ```
 
+### SSHを利用したファイル,ディレクトリの転送
+`scp`もしくは`sftp`を使用すればファイル,ディレクトリの転送が行える.
+
+#### scp
+* クライアントからホストに転送
+
+    - ファイルの転送
+
+        ```bash
+        $ scp /path/to/file -P [ポート番号] user@host:/path/to/destination/
+        ```
+
+    - ディレクトリの転送
+    
+        ```bash
+        $ scp -r /path/to/directory -P [ポート番号] user@host:/path/to/destination/
+        ```
+
+* ホストからクライアントに転送
+
+    - ファイルの転送
+
+        ```bash
+        $ scp -P [ポート番号] user@host:/path/to/file /path/to/destination/
+        ```
+
+    - ディレクトリの転送
+    
+        ```bash
+        $ scp -r -P [ポート番号] user@host:/path/to/directory /path/to/destination/
+        ```
+
+* Note
+    - ポート番号の指定はsshと異なり`-P`であることに注意
+    - その他,基本的にsshとコマンドオプションなどは同じ
+    - もちろん,鍵認証なども使用できる
+
+#### sftp
+省略.
+
+#### scp, sftpの違い
+* scp
+    - 転送の再開ができない.
+    - SFTPに比べて高速(と言われている)
+    - sshが使用できるなら使用可能
+
+* sftp
+    - 転送を中断しても, 途中から再開できる
+    - SCPよりも転送速度が遅い
+    - 対話的
+    - ホスト側で使用を許可する必要がある
+
+
 ## 鍵の事前登録
 1. 鍵の作成  
 
@@ -142,5 +195,8 @@ ssh接続時のポート番号やユーザー名,使用する秘密鍵などの�
 * ssh接続時に`WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`と警告され接続できない.  
     `~/.ssh/known_hosts`内に接続先のホスト名またはipアドレスなどから始まる行があるので削除すれば解決する.
 
+## TODO
+- `sftp`の使用方法を追加する.
+- X転送での`-X`と`-Y`の違いを記述する.
 
 
