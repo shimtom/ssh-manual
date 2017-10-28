@@ -13,7 +13,6 @@ user@host's password:                                  # userのパスワード�
 * Note  
     `-p`を使用しない場合はポート番号として`22`が使用される.
 
-
 ### 鍵認証を使用した接続
 ```bash
 $ ssh -i /path/to/private_key -p [ポート番号] user@host
@@ -23,7 +22,14 @@ $ ssh -i /path/to/private_key -p [ポート番号] user@host
     - 鍵の指定を省略した場合`~/.ssh/id_rsa`が使用される.
     - 鍵が存在しない場合はパスワード認証が行われる.
 
-#### 鍵の事前登録
+### X転送
+オプションに`-X`を使用することでX転送ができる.これにより,ホスト側でGUIアプリケーションを起動した場合,クライアント側にそのGUIを表示する.
+
+```bash
+$ ssh -X -p [ポート番号] user@host
+```
+
+## 鍵の事前登録
 1. 鍵の作成  
 
     RSA暗号化方式で鍵長4096bitの秘密鍵,公開鍵を作成する.
@@ -65,8 +71,7 @@ $ ssh -i /path/to/private_key -p [ポート番号] user@host
         ```
 
         * Note
-            - 秘密鍵と公開鍵は同じディレクトリに存在しなければならない.
-
+            - 秘密鍵と公開鍵は同じディレクトリに存在しなければならない.  
     * `ssh-copy-id`を使用しない場合
 
         ```bash
@@ -83,18 +88,16 @@ $ ssh -i /path/to/private_key -p [ポート番号] user@host
     ```
     `user`のパスワードを尋ねられることなく接続できる.ただし,鍵の作成時にパスワードを設定した場合は鍵のパスワードを尋ねられる.
 
-## Troubleshooting
-* ssh接続時に`WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`と警告され接続できない.  
-    `~/.ssh/known_hosts`内に接続先のホスト名またはipアドレスなどから始まる行があるので削除すれば解決する.
-
-
-## 設定ファイルの使用
+### 設定ファイルの使用
 ssh接続時のポート番号やユーザー名,使用する秘密鍵などの設定を設定ファイルにまとめることができる.
 1. `~/.ssh/config`の作成
-    ```
+
+    ```bash
     $ touch ~/.ssh/config
     ```
+
 2. `~/.ssh/config`に設定を書き込む
+
     ```dat:~/.ssh/config
     # サーバーA
     Host serverA
@@ -115,15 +118,29 @@ ssh接続時のポート番号やユーザー名,使用する秘密鍵などの�
         IdentitiesOnly yes
         ServerAliveInterval 120
     ```
-    * `Host`: ホスト名.`HostName`が存在する場合には好きな名前を使用できる.
-    * `HostName`: ホストのアドレスかipアドレス.
-    * `User`: ログインユーザー名
-    * `IdentityFile`: 秘密鍵のパス.秘密鍵を使用しない場合はなくてよい.
-    * `Port`: 接続に使用するポート番号
-    * `TCPKeepAlive`: `yes` or `no`. 接続状態を継続したい場合`yes`.
-    * `IdentitiesOnly`: `yes` or `no`.秘密鍵を明示する場合は`yes`.
-    * `ServerAliveInterval`: 一定期間サーバからデータが送られてこないときにタイムアウトする秒数.
+    - `Host`: ホスト名.`HostName`が存在する場合には好きな名前を使用できる.
+    - `HostName`: ホストのアドレスかipアドレス.
+    - `User`: ログインユーザー名
+    - `IdentityFile`: 秘密鍵のパス.秘密鍵を使用しない場合はなくてよい.
+    - `Port`: 接続に使用するポート番号
+    - `TCPKeepAlive`: `yes` or `no`. 接続状態を継続したい場合`yes`.
+    - `IdentitiesOnly`: `yes` or `no`.秘密鍵を明示する場合は`yes`.
+    - `ServerAliveInterval`: 一定期間サーバからデータが送られてこないときにタイムアウトする秒数.  
+
+3. 設定の使用  
+
+    デフォルトでは`~/.ssh/config`が自動で使用される.設定ファイルを指定したい場合は`-F`を使用する.
+    
+    ```bash
+    $ ssh -F /path/to/configfile host
+    ```
+
+* 参考:
+    https://koejima.com/archives/583/#i-3
+
+## Troubleshooting
+* ssh接続時に`WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`と警告され接続できない.  
+    `~/.ssh/known_hosts`内に接続先のホスト名またはipアドレスなどから始まる行があるので削除すれば解決する.
 
 
-### 参考
-https://euske.github.io/openssh-jman/ssh_config.html
+
