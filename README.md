@@ -195,6 +195,13 @@ ssh接続時のポート番号やユーザー名,使用する秘密鍵などの�
 * ssh接続時に`WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`と警告され接続できない.  
     `~/.ssh/known_hosts`内に接続先のホスト名またはipアドレスなどから始まる行があるので削除すれば解決する.
 
+* ssh接続時に`sign_and_send_pubkey: signing failed: agent refused operation`と警告される.
+
+    ```bash
+    # [Private key]は接続時に使用する秘密鍵に変更してください.
+    $ ssh-add [Private Key]
+    ```
+
 ## TODO
 - `sftp`の使用方法を追加する.
 - X転送での`-X`と`-Y`の違いを記述する.
